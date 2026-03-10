@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Readiness Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>AI Readiness Assessment</h1>
+            <p class="subtitle">Discover your organization's AI potential in 10 questions</p>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div id="progress-container" class="progress-container">
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <p id="progress-text" class="progress-text">Question 1 of 10</p>
+        </div>
+
+        <!-- Assessment Form -->
+        <div id="assessment-form" class="assessment-section">
+            <div id="dimension-header" class="dimension-header"></div>
+            <div id="question-container" class="question-container"></div>
+            <div class="navigation-buttons">
+                <button id="prev-btn" class="btn btn-secondary" disabled>Previous</button>
+                <button id="next-btn" class="btn btn-primary">Next</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading-state" style="display: none;">
+            <div class="spinner"></div>
+            <p>Analyzing your responses with AI...</p>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="results-section" style="display: none;">
+            <h2>Your AI Readiness Report</h2>
+
+            <!-- Overall Score -->
+            <div class="score-card overall-score">
+                <h3>Overall Readiness</h3>
+                <div class="score-display">
+                    <div id="overall-score" class="score-number">0.0</div>
+                    <div id="readiness-level" class="readiness-badge">-</div>
+                </div>
+            </div>
+
+            <!-- Dimension Scores -->
+            <div class="dimension-scores">
+                <div class="dimension-score" id="data-score-card">
+                    <h4>Data & Infrastructure</h4>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="data-score-fill"></div>
+                    </div>
+                    <span class="score-value" id="data-score-value">0.0</span>
+                </div>
+                <div class="dimension-score" id="skills-score-card">
+                    <h4>Skills & Culture</h4>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="skills-score-fill"></div>
+                    </div>
+                    <span class="score-value" id="skills-score-value">0.0</span>
+                </div>
+                <div class="dimension-score" id="strategy-score-card">
+                    <h4>Strategy & Leadership</h4>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="strategy-score-fill"></div>
+                    </div>
+                    <span class="score-value" id="strategy-score-value">0.0</span>
+                </div>
+            </div>
+
+            <!-- AI Insights -->
+            <div class="insights-container">
+                <div class="insight-card">
+                    <h3>Key Insight</h3>
+                    <p id="overall-insight"></p>
+                </div>
+
+                <div class="insight-card">
+                    <h3>Dimension Analysis</h3>
+                    <div id="dimension-insights"></div>
+                </div>
+
+                <div class="insight-card">
+                    <h3>Top Recommendations</h3>
+                    <ol id="recommendations"></ol>
+                </div>
+
+                <div class="insight-card warning">
+                    <h3>Key Risks</h3>
+                    <ul id="risks"></ul>
+                </div>
+            </div>
+
+            <!-- Restart Button -->
+            <div class="action-buttons">
+                <button id="restart-btn" class="btn btn-secondary">Take Assessment Again</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built with <a href="https://claude.ai" target="_blank">Claude</a> | Based on research from Gartner, McKinsey, MIT Sloan & EU frameworks</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
