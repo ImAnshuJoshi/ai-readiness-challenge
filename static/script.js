@@ -164,6 +164,9 @@ async function submitAssessment() {
     }
 }
 
+// Dimension chart instance (destroy before re-creating on restart)
+let dimensionsChart = null;
+
 // Display results
 function displayResults(data) {
     // Hide loading, show results
@@ -179,6 +182,9 @@ function displayResults(data) {
     updateDimensionScore('data', dimensionScores.data_infrastructure);
     updateDimensionScore('skills', dimensionScores.skills_culture);
     updateDimensionScore('strategy', dimensionScores.strategy_leadership);
+
+    // Draw dimensions bar chart
+    drawDimensionsChart(dimensionScores);
 
     // Overall insight
     document.getElementById('overall-insight').textContent = data.insights.overall_insight;
@@ -214,6 +220,62 @@ function displayResults(data) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Draw radar chart of dimension scores
+function drawDimensionsChart(dimensionScores) {
+    const canvas = document.getElementById('dimensions-chart');
+    if (!canvas || typeof Chart === 'undefined') return;
+
+    if (dimensionsChart) {
+        dimensionsChart.destroy();
+        dimensionsChart = null;
+    }
+
+    const labels = ['Data & Infrastructure', 'Skills & Culture', 'Strategy & Leadership'];
+    const values = [
+        dimensionScores.data_infrastructure ?? 0,
+        dimensionScores.skills_culture ?? 0,
+        dimensionScores.strategy_leadership ?? 0
+    ];
+
+    const ctx = canvas.getContext('2d');
+    dimensionsChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Score (1–5)',
+                data: values,
+                backgroundColor: 'rgba(59, 130, 246, 0.25)',
+                borderColor: '#3B82F6',
+                borderWidth: 2,
+                pointBackgroundColor: '#3B82F6',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#3B82F6'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                r: {
+                    min: 0,
+                    max: 5,
+                    ticks: { stepSize: 1 }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `${ctx.label}: ${ctx.raw.toFixed(1)} / 5`
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Update dimension score display
 function updateDimensionScore(prefix, score) {
     const percentage = (score / 5) * 100;
@@ -223,6 +285,10 @@ function updateDimensionScore(prefix, score) {
 
 // Restart assessment
 function restartAssessment() {
+    if (dimensionsChart) {
+        dimensionsChart.destroy();
+        dimensionsChart = null;
+    }
     currentQuestionIndex = 0;
     responses = {};
 

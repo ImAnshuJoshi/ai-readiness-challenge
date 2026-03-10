@@ -270,6 +270,23 @@ header h1 {
     font-weight: 600;
 }
 
+.dimensions-chart-container {
+    background: var(--bg-light);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.dimensions-chart-container h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+#dimensions-chart {
+    max-height: 220px;
+}
+
 .dimension-scores {
     display: grid;
     gap: 1.5rem;

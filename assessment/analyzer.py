@@ -1,16 +1,16 @@
 """
-Claude API Integration for AI Readiness Analysis
-Generates personalized insights and recommendations
+LM Studio Integration for AI Readiness Analysis
+Generates personalized insights using a local model (e.g. google/gemma-3-4b)
 """
 
 import os
 import json
-from anthropic import Anthropic
+from openai import OpenAI
 
 
 def generate_assessment(formatted_data):
     """
-    Generate AI readiness insights using Claude API
+    Generate AI readiness insights using LM Studio (OpenAI-compatible API)
 
     Args:
         formatted_data: dict with scores, readiness_level, and responses
@@ -18,12 +18,10 @@ def generate_assessment(formatted_data):
     Returns:
         dict with insights, recommendations, and risks
     """
-    # Initialize Anthropic client
-    api_key = os.getenv("ANTHROPIC_API_KEY")
-    if not api_key:
-        raise ValueError("ANTHROPIC_API_KEY environment variable not set")
+    base_url = os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234/v1")
+    model = os.getenv("LM_STUDIO_MODEL", "google/gemma-3-4b")
 
-    client = Anthropic(api_key=api_key)
+    client = OpenAI(base_url=base_url, api_key="not-needed")
 
     # Build the prompt
     system_prompt = """You are an expert AI readiness consultant with deep knowledge of organizational AI adoption frameworks including Gartner AI Maturity Model, McKinsey State of AI research, MIT Sloan leadership studies, and EU AI Act compliance requirements.
@@ -74,23 +72,19 @@ Based on this assessment, provide a comprehensive analysis in JSON format with t
 
 Make sure your insights reference specific responses and are tailored to this organization's situation. Avoid generic advice."""
 
-    # Call Claude API
+    # Call LM Studio (OpenAI-compatible) API
     try:
-        message = client.messages.create(
-            model="claude-sonnet-4-5-20250929",
+        response = client.chat.completions.create(
+            model=model,
             max_tokens=2048,
             temperature=0.7,
-            system=system_prompt,
             messages=[
-                {
-                    "role": "user",
-                    "content": user_prompt
-                }
-            ]
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
         )
 
-        # Parse the response
-        response_text = message.content[0].text
+        response_text = response.choices[0].message.content
 
         # Extract JSON from response (handle markdown code blocks)
         if "```json" in response_text:
@@ -109,17 +103,17 @@ Make sure your insights reference specific responses and are tailored to this or
         return {
             "success": True,
             "analysis": analysis,
-            "model": "claude-sonnet-4-5-20250929"
+            "model": model,
         }
 
     except json.JSONDecodeError as e:
         return {
             "success": False,
-            "error": f"Failed to parse Claude response: {str(e)}",
-            "raw_response": response_text if 'response_text' in locals() else None
+            "error": f"Failed to parse model response: {str(e)}",
+            "raw_response": response_text if "response_text" in locals() else None,
         }
     except Exception as e:
         return {
             "success": False,
-            "error": f"Claude API error: {str(e)}"
+            "error": f"LM Studio API error: {str(e)}",
         }

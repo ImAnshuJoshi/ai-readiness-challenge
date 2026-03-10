@@ -51,7 +51,13 @@
                 </div>
             </div>
 
-            <!-- Dimension Scores -->
+            <!-- Dimension Scores Chart -->
+            <div class="dimensions-chart-container">
+                <h3>Dimension Scores</h3>
+                <canvas id="dimensions-chart" aria-label="Bar chart of AI readiness dimension scores"></canvas>
+            </div>
+
+            <!-- Dimension Scores (bars) -->
             <div class="dimension-scores">
                 <div class="dimension-score" id="data-score-card">
                     <h4>Data & Infrastructure</h4>
@@ -111,6 +117,7 @@
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

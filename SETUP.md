@@ -13,21 +13,24 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure API Key
+### 2. Run LM Studio with a model
 
-Create a `.env` file in the project root:
+1. Install [LM Studio](https://lmstudio.ai/) and open it.
+2. Download the **google/gemma-3-4b** model (or another model) and load it.
+3. Start the local server in LM Studio (e.g. **Develop → Local Server**, then Start Server). The API runs at `http://localhost:1234/v1` by default.
+
+Optional: create a `.env` file to override defaults:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` and add your Anthropic API key:
+Edit `.env` if needed:
 
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-...
+# LM_STUDIO_BASE_URL=http://localhost:1234/v1
+# LM_STUDIO_MODEL=google/gemma-3-4b
 ```
-
-**Get your API key:** https://console.anthropic.com/settings/keys
 
 ### 3. Run the Application
 
@@ -60,19 +63,18 @@ Try these scenarios to demo different outcomes:
 
 ## Troubleshooting
 
-### "ANTHROPIC_API_KEY not found"
-- Make sure you created a `.env` file
-- Check that the API key is correct
-- Restart the Flask app after creating `.env`
+### "LM Studio API error" / connection refused
+- Ensure LM Studio is running and the local server is started.
+- Confirm the model (e.g. google/gemma-3-4b) is loaded in LM Studio.
+- Check that the server is on `http://localhost:1234` (or set `LM_STUDIO_BASE_URL` in `.env`).
 
 ### "Module not found" errors
-- Make sure you ran `pip install -r requirements.txt`
-- Check you're using Python 3.7+
+- Run `pip install -r requirements.txt`
+- Use Python 3.7+
 
-### Claude API errors
-- Verify your API key is valid
-- Check you have API credits
-- Review error message in browser console
+### Model response or JSON parse errors
+- Try a different or larger model in LM Studio.
+- Check the raw error in the browser or server logs.
 
 ## Project Structure
 
@@ -86,7 +88,7 @@ ai-readiness-challenge/
 │   ├── __init__.py
 │   ├── questions.py         # 10 assessment questions
 │   ├── scorer.py            # Scoring logic
-│   └── analyzer.py          # Claude API integration
+│   └── analyzer.py          # LM Studio (OpenAI-compatible) integration
 ├── static/
 │   ├── style.css            # Frontend styling
 │   └── script.js            # Frontend logic

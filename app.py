@@ -115,22 +115,24 @@ def assess():
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
-    api_key_set = bool(os.getenv("ANTHROPIC_API_KEY"))
+    base_url = os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234/v1")
+    model = os.getenv("LM_STUDIO_MODEL", "google/gemma-3-4b")
 
     return jsonify({
         "success": True,
-        "api_key_configured": api_key_set
+        "lm_studio_base_url": base_url,
+        "lm_studio_model": model,
     })
 
 
 if __name__ == '__main__':
-    # Check if API key is set
-    if not os.getenv("ANTHROPIC_API_KEY"):
-        print("\n⚠️  WARNING: ANTHROPIC_API_KEY not found in environment")
-        print("Please create a .env file with your API key")
-        print("See .env.example for template\n")
-
-    print("\n🚀 Starting AI Readiness Assessment Tool")
+    base_url = os.getenv("LM_STUDIO_BASE_URL", "http://localhost:1234/v1")
+    model = os.getenv("LM_STUDIO_MODEL", "google/gemma-3-4b")
+    print("\n🤖 Using LM Studio for AI analysis")
+    print(f"   Base URL: {base_url}")
+    print(f"   Model: {model}")
+    print("   Ensure LM Studio is running with a model loaded.\n")
+    print("🚀 Starting AI Readiness Assessment Tool")
     print("📍 Visit: http://localhost:5000\n")
 
     app.run(debug=True, port=5000)
